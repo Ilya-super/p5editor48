@@ -8,5 +8,3 @@
 ├── main.ts                # Вход
 └── vite.config.ts         # (если нужно)
 
-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
-
