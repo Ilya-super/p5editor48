@@ -1,0 +1,12 @@
+﻿src/
+├── assets/                # если нужны картинки для скетчей
+├── components/
+│   ├── CodeEditor.vue     # Редактор кода
+│   ├── P5Canvas.vue       # Canvas для p5.js
+│   └── ConsoleOutput.vue  # Консоль
+├── App.vue                # Основной layout
+├── main.ts                # Вход
+└── vite.config.ts         # (если нужно)
+
+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
+
