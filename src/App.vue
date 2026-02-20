@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'  // ← ДОБАВЛЕН ИМПОРТ
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import CodeEditor from './components/CodeEditor.vue'
 import P5Canvas from './components/P5Canvas.vue'
 import ConsoleOutput from './components/ConsoleOutput.vue'
@@ -12,9 +12,6 @@ const code = ref(`function setup() {
 function draw() {
   background(220);
   ellipse(mouseX, mouseY, 50, 50);
-  if (frameCount % 60 === 0) {
-    console.log("Прошло 60 кадров");
-  }
 }`)
 
 // Сохраняем оригинальный код для сброса
@@ -31,11 +28,7 @@ const availableFonts = [
   { name: 'Consolas', value: 'Consolas, Monaco, monospace' },
   { name: 'Monaco', value: 'Monaco, Consolas, monospace' },
   { name: 'Courier New', value: '"Courier New", Courier, monospace' },
-  { name: 'Fira Code', value: '"Fira Code", Consolas, monospace' },
-  { name: 'JetBrains Mono', value: '"JetBrains Mono", Consolas, monospace' },
-  { name: 'Source Code Pro', value: '"Source Code Pro", Consolas, monospace' },
-  { name: 'Ubuntu Mono', value: '"Ubuntu Mono", Consolas, monospace' },
-  { name: 'Menlo', value: 'Menlo, Consolas, monospace' }
+  { name: 'Fira Code', value: '"Fira Code", Consolas, monospace' }
 ]
 
 // Параметры темы
@@ -48,7 +41,6 @@ const historyIndex = ref(-1)
 
 function addMessage(msg: string) {
   messages.value.push(msg)
-  // Автоскролл консоли вниз
   setTimeout(() => {
     const console = document.querySelector('.console')
     if (console) {
@@ -112,7 +104,6 @@ function toggleTheme() {
   addMessage(`🎨 Тема изменена на ${theme.value === 'dark' ? 'тёмную' : 'светлую'}`)
 }
 
-// Новые функции
 function clearEditor() {
   if (confirm('Очистить редактор кода? Все изменения будут потеряны.')) {
     saveToHistory()
@@ -138,7 +129,6 @@ function copyToClipboard() {
 }
 
 function formatCode() {
-  // Простое форматирование кода (базовое)
   try {
     saveToHistory()
     let formatted = code.value
@@ -156,7 +146,6 @@ function formatCode() {
 }
 
 function saveToHistory() {
-  // Сохраняем текущее состояние для Undo
   if (code.value !== history.value[historyIndex.value]) {
     history.value = history.value.slice(0, historyIndex.value + 1)
     history.value.push(code.value)
@@ -184,12 +173,6 @@ function redo() {
   }
 }
 
-function downloadScreenshot() {
-  addMessage('📸 Генерация скриншота...')
-  // Эта функция будет делать скриншот холста через p5.js
-  // canvasRef.value?.screenshot()
-}
-
 function showShortcuts() {
   addMessage('⌨️ Горячие клавиши: Ctrl+Enter - запуск, Ctrl+S - сохранить, Ctrl+Z - отмена, Ctrl+Y - повтор')
 }
@@ -204,26 +187,22 @@ onUnmounted(() => {
 })
 
 function handleKeyDown(e: KeyboardEvent) {
-  // Ctrl+Enter - запуск скетча
   if (e.ctrlKey && e.key === 'Enter') {
     e.preventDefault()
     startSketch()
   }
   
-  // Ctrl+S - сохранить
   if (e.ctrlKey && e.key === 's') {
     e.preventDefault()
     saveSketch()
   }
   
-  // Ctrl+Z - отмена (если не в фокусе редактора)
-  if (e.ctrlKey && e.key === 'z' && !e.target?.matches('textarea, input, .cm-content')) {
+  if (e.ctrlKey && e.key === 'z' && !(e.target as HTMLElement)?.matches?.('textarea, input, .cm-content')) {
     e.preventDefault()
     undo()
   }
   
-  // Ctrl+Y - повтор
-  if (e.ctrlKey && e.key === 'y' && !e.target?.matches('textarea, input, .cm-content')) {
+  if (e.ctrlKey && e.key === 'y' && !(e.target as HTMLElement)?.matches?.('textarea, input, .cm-content')) {
     e.preventDefault()
     redo()
   }
@@ -272,7 +251,6 @@ function handleKeyDown(e: KeyboardEvent) {
       
       <input type="file" ref="fileInput" style="display: none" @change="handleFileUpload" accept=".js" />
       
-      <!-- Новые кнопки для работы с кодом -->
       <div class="toolbar-divider"></div>
       
       <div class="toolbar-buttons">
@@ -315,7 +293,6 @@ function handleKeyDown(e: KeyboardEvent) {
         </button>
       </div>
       
-      <!-- Кнопка переключения темы с анимацией -->
       <button @click="toggleTheme" class="theme-btn" :title="`Переключить на ${theme === 'dark' ? 'светлую' : 'тёмную'} тему`">
         <div class="theme-icon-container">
           <span class="theme-icon" :class="{ 'rotate': theme === 'light' }">
@@ -325,7 +302,6 @@ function handleKeyDown(e: KeyboardEvent) {
         </div>
       </button>
       
-      <!-- Настройки шрифта с улучшенным дизайном -->
       <div class="font-controls">
         <div class="font-control-group">
           <span class="font-label">
@@ -383,7 +359,6 @@ function handleKeyDown(e: KeyboardEvent) {
 
     <div class="main">
       <div class="editor-container" :class="`theme-${theme}`">
-        <!-- Декоративная полоска над редактором -->
         <div class="editor-header">
           <div class="window-controls">
             <span class="window-control red"></span>
@@ -604,7 +579,6 @@ function handleKeyDown(e: KeyboardEvent) {
   background: linear-gradient(135deg, #ff9800, #f57c00);
 }
 
-/* Новые стили для дополнительных кнопок */
 .clear-btn {
   background: linear-gradient(135deg, #9c27b0, #7b1fa2);
 }
@@ -790,13 +764,6 @@ function handleKeyDown(e: KeyboardEvent) {
 }
 
 /* Заголовки редактора и холста */
-.editor-container, .canvas-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  position: relative;
-}
-
 .editor-header, .canvas-header {
   display: flex;
   align-items: center;
@@ -826,9 +793,11 @@ function handleKeyDown(e: KeyboardEvent) {
 .window-control.red {
   background: #ff5f56;
 }
+
 .window-control.yellow {
   background: #ffbd2e;
 }
+
 .window-control.green {
   background: #27c93f;
 }
